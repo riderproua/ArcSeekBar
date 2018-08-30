@@ -13,8 +13,8 @@ internal data class ArcSeekBarData(
     private val pi = Math.PI.toFloat()
     private val zero = 0.0001F
     val r: Float = height / 2 + width * width / 8 / height
-    private val circleCenterX: Float = width / 2 + dy
-    private val circleCenterY: Float = r + dx
+    val circleCenterX: Float = width / 2 + dy
+    val circleCenterY: Float = r + dx
     private val alphaRad: Float = bound(zero, Math.acos((r - height).toDouble() / r).toFloat(), 2 * pi)
     val arcRect: RectF = RectF(circleCenterX - r, circleCenterY - r, circleCenterX + r, circleCenterY + r)
     val startAngle: Float = bound(180F, 270 - alphaRad / 2 / pi * 360F, 360F)
@@ -33,5 +33,12 @@ internal data class ArcSeekBarData(
         val touchAngle = Math.acos(xFromCenter / r) + alphaRad - Math.PI / 2
         val angleToMax = 1.0 - touchAngle / (2 * alphaRad)
         return bound(0, ((maxProgress + 1) * angleToMax).toInt(), maxProgress)
+    }
+
+    fun dotOnArc(progress: Int): Pair<Int, Int> {
+        val dotSweepRad = bound(zero, progress.toFloat() / maxProgress * 2 * alphaRad, 2 * pi)
+        val dotX: Int = (r * Math.cos(alphaRad + Math.PI / 2 - dotSweepRad).toFloat() + circleCenterX).toInt()
+        val dotY: Int = (-r * Math.sin(alphaRad + Math.PI / 2 - dotSweepRad).toFloat() + circleCenterY).toInt()
+        return Pair(dotX,dotY)
     }
 }

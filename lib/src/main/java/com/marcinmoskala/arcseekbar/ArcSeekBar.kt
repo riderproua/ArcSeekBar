@@ -66,7 +66,9 @@ class ArcSeekBar @JvmOverloads constructor(
             invalidate()
         }
 
-    private val thumb: Drawable = a?.getDrawable(R.styleable.ArcSeekBar_thumb) ?: resources.getDrawable(R.drawable.thumb)
+    val thumb: Drawable = a?.getDrawable(R.styleable.ArcSeekBar_thumb) ?: resources.getDrawable(R.drawable.thumb)
+
+    private var notchPerPercent = a.useOrDefault(0) { getInt(R.styleable.ArcSeekBar_notchPerPercent, it) }
 
     private var roundedEdges = a.useOrDefault(true) { getBoolean(R.styleable.ArcSeekBar_roundEdges, it) }
         set(value) {
@@ -114,6 +116,21 @@ class ArcSeekBar @JvmOverloads constructor(
         drawData?.run {
             canvas.drawArc(arcRect, startAngle, sweepAngle, false, progressBackgroundPaint)
             canvas.drawArc(arcRect, startAngle, progressSweepAngle, false, progressPaint)
+            if (notchPerPercent > 0) {
+                var distance = maxProgress
+                var counter = 0.0
+                val percent = notchPerPercent * 0.01
+                counter += distance * percent
+                while (counter < maxProgress - 1) {
+                    val point = dotOnArc(counter.toInt())
+                    if (counter > progress) {
+                        canvas.drawCircle(point.first.toFloat(), point.second.toFloat(), 10f, progressBackgroundPaint)
+                    } else {
+                        canvas.drawCircle(point.first.toFloat(), point.second.toFloat(), 10f, progressPaint)
+                    }
+                    counter += distance * percent
+                }
+            }
             if (mEnabled) drawThumb(canvas)
         }
     }

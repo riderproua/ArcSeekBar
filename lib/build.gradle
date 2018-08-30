@@ -7,7 +7,7 @@ version = '0.01'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    buildToolsVersion '27.0.3'
 }
 
 dependencies {

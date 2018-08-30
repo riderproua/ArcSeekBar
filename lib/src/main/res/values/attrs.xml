@@ -9,6 +9,7 @@
         <attr name="progressBackgroundColor" format="color" />
         <attr name="progressBackgroundWidth" format="dimension" />
         <attr name="roundEdges" format="boolean" />
+        <attr name="notchPerPercent" format="integer"/>
         <attr name="enabled" format="boolean" />
     </declare-styleable>
 </resources>
